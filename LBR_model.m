@@ -33,28 +33,30 @@ function [LBR,Y,LBRpial] = LBR_model(P,cbf,cmro2)
 %               xlim([0 100]); ylim([0 6]); xlabel('1 - Cortical depth (%)'); ylabel('LBR (%)'); axis square;
 %
 %        For dynamic response:
-%               K = 6;  
-%               P.N = neuronal_NVC_parameters(K);  % consider default parameters
-%               P.N.T = 30; % (in seconds)
-%               P.H = LBR_parameters(K);
-%               P.H.T  = P.N.T;
-%               P.H.dt = P.N.dt;
-%               U.u = zeros(P.N.T/P.N.dt,K);
-%               dur = 2/P.N.dt; % 2 sec stimulus
-%               onset     = 2/P.N.dt;
-%               offset    = onset + dur;
-%               U.u(onset:offset,:) = 1;
-%               [neuro, cbf]  = neuronal_NVC_model(P.N,U);
-%               P.H.alpha_v   = 0.35;
-%               P.H.alpha_d   = 0.2;
-%               P.H.tau_d_de  = 30;
-%               [LBR,Y]       = LBR_model(P.H,cbf);
-%               time_axis = [0:P.H.dt:P.H.T-P.H.dt];
-%               figure(1), 
-%               subplot(121), plot(time_axis,cbf); xlim([time_axis(1), time_axis(end)]); ylim([0.5 2]); 
-%                            xlabel('1 - Cortical depth (%)'); ylabel('Relative CBF (%)'); axis square;
-%               subplot(122), plot(time_axis,LBR); xlim([time_axis(1), time_axis(end)]); ylim([-1 4]);  %                           xlabel('1 - Cortical depth (%)'); ylabel('LBR (%)'); axis square;
-%
+%{
+               K = 6;  
+               P.N = neuronal_NVC_parameters(K);  % consider default parameters
+               P.N.T = 30; % (in seconds)
+               P.H = LBR_parameters(K);
+               P.H.T  = P.N.T;
+               P.H.dt = P.N.dt;
+               P.H.alpha_v   = 0.35;
+               P.H.alpha_d   = 0.2;
+               P.H.tau_d_de  = 30;
+               U.u = zeros(P.N.T/P.N.dt,K);
+               dur = 2/P.N.dt; % 2 sec stimulus
+               onset     = 2/P.N.dt;
+               offset    = onset + dur;
+               U.u(onset:offset,:) = 1;
+               [neuro, cbf]  = neuronal_NVC_model(P.N,U);
+               [LBR,Y]       = LBR_model(P.H,cbf);
+               time_axis = [0:P.H.dt:P.H.T-P.H.dt];
+               figure(1), 
+               subplot(121), plot(time_axis,cbf); xlim([time_axis(1), time_axis(end)]); ylim([0.5 2]); 
+                            xlabel('1 - Cortical depth (%)'); ylabel('Relative CBF (%)'); axis square;
+               subplot(122), plot(time_axis,LBR); xlim([time_axis(1), time_axis(end)]); ylim([-1 4]);  
+               xlabel('1 - Cortical depth (%)'); ylabel('LBR (%)'); axis square;
+%}
 %--------------------------------------------------------------------------
 % 
 if nargin<3
@@ -93,7 +95,7 @@ if length(P.x_v) == K,             % For ascending vein
 else
     x_d  = 10+s_d*flipud(P.l(:));  % Possibility to define linear increase 
 end
-x_d      = x_d./sum(x_d);          % Fraction of CBV0 across depths in venules 
+x_d      = x_d./sum(x_d);          % Fraction of CBV0 across depths in AV
 
 V0v      = V0t*w_v*x_v;            % CBV0 in venules
 V0d      = V0t*w_d*x_d;            % CBV0 in ascending vein
@@ -193,7 +195,7 @@ TE     = P.TE;          % echo-time (sec)
 Hct_v  = P.Hct_v;       % Hematocrit fraction
 Hct_d  = P.Hct_d;
 Hct_p  = P.Hct_p;
-B0     = P.B0;          % Field strenght        
+B0     = P.B0;          % Field strength        
 gyro   = P.gyro;        % Gyromagnetic constant 
 suscep = P.suscep;      % Susceptibility difference
 
@@ -390,9 +392,13 @@ for t = 1:P.T/dt
 
     
     
-    LBR(t,:) = H0.*((1-V0vq-V0dq).*(k1v.*V0vq.*(1-q_v)       +k1d.*V0dq.*(1-q_d))+...
-                                    +k2v.*V0vq.*(1-q_v./v_v) +k2d.*V0dq.*(1-q_d./v_d)+...
-                                    +k3v.*V0vq.*(1-v_v)      +k3d.*V0dq.*(1-v_d)).*100;
+    %LBR(t,:) = H0.*((1-V0vq-V0dq).*(k1v.*V0vq.*(1-q_v)     +k1d.*V0dq.*(1-q_d))+...
+    %                                +k2v.*V0vq.*(1-q_v./v_v) +k2d.*V0dq.*(1-q_d./v_d)+...
+    %                                +k3v.*V0vq.*(1-v_v) +k3d.*V0dq.*(1-v_d)).*100;
+
+    LBR(t,:) = H0.*((1-V0vq-V0dq).*(k1d.*V0dq.*(1-q_d))+...
+                                    +k2d.*V0dq.*(1-q_d./v_d)+...
+                                    +k3d.*V0dq.*(1-v_d)).*100;
     
     
     LBRpial(t,:) = H0p.*((1-V0pq).*(k1p.*V0pq.*(1-q_p))      +k2p.*V0pq.*(1-q_p./v_p)+...

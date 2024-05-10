@@ -11,10 +11,8 @@ K = 6;                       % We will consider six depths
 P{1} = LBR_parameters(K);    % Get parameter structure for LBR model
                              % By default we consider 40 sec stimulus
                              % duration in order to reach steady-state (i.e P{1}.T = 40)
-% Define laminar profile relative CBF (considering six depth) with 60% at 
-
+% Define laminar profile relative CBF (considering six depth) constant at all layers 
 cbf_original   = [1 1 1 1 1 1];
-% the top and low depths and 30% in the middle depths 
 cbf{1}      = kron(cbf_original*1.2,ones(P{1}.T/P{1}.dt,1));
 P{1}.V0t  = 2;    % define total amount of baseline CBV in the GM (in mL)
 P{1}.w_v  = 0.4;  % define fraction of microvasculature (venules) with respect to the AV
@@ -56,7 +54,7 @@ for i = 1:length(LBR)
     subplot(133),
     plot(P{i}.l,flipud(LBR{i}(end,:)'),'.-'); hold on; xlim([0 100]); ylim([0 5]); title('Laminar BOLD profile')
     xlabel('1 - Cortical depth (%)'); ylabel('LBR (%)'); axis square;
-    scale(i) = LBR{i}(end,1)./LBR{i}(end,end);
+    scale(i) = LBR{i}(end,1)./LBR{i}(end,end); % ratio of layer 1 to layer 6
 end;
 hold off;
 
@@ -72,9 +70,9 @@ figure(3) % relation ship between CBF and BOLD is still nonlinear
           % observation that relationship between neuronal and BOLD
           % response is more or less linear.
 plot([cbf{1}(end,1),cbf{2}(end,1),cbf{3}(end,1),cbf{4}(end,1)]',...
-     [LBR{1}(end,1),LBR{2}(end,1),LBR{3}(end,1),LBR{4}(end,1)]); xlim([1 2]); hold on;
+     [LBR{1}(end,1),LBR{2}(end,1),LBR{3}(end,1),LBR{4}(end,1)]); xlim([1 2]); hold on; % lower layer
 plot([cbf{1}(end,end),cbf{2}(end,end),cbf{3}(end,end),cbf{4}(end,end)]',...
-      [LBR{1}(end,end),LBR{2}(end,end),LBR{3}(end,end),LBR{4}(end,end)]); xlim([1 2]); hold off
- xlabel('realative CBF (-)'), ylabel('BOLD (%)'); title('CBF vs BOLD'); legend({'Upper','Lower'})
+      [LBR{1}(end,end),LBR{2}(end,end),LBR{3}(end,end),LBR{4}(end,end)]); xlim([1 2]); hold off % upper layer
+ xlabel('relative CBF (-)'), ylabel('BOLD (%)'); title('CBF vs BOLD'); legend({'Upper','Lower'})
  
  

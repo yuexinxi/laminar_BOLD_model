@@ -51,8 +51,8 @@ P.s_d = 0.3;  % Slope of CBV increase in ascending vein     [0-1.5]
 
 P.t0v = 1;    % Transit time through microvasculature(in second)
 P.E0v = 0.35; % Baseline oxygen extraction fraction in venules
-P.E0d = 0.35; % Baseline oxygen extraction fraction in venules
-P.E0p = 0.35; % Baseline oxygen extraction fraction in venules
+P.E0d = 0.35; % Baseline oxygen extraction fraction in ascending veins
+P.E0p = 0.35; % Baseline oxygen extraction fraction in pial vein
 
 % Parameters describing relative relationship between physiological variable:
 % CBF-CBV coupling (steady-state)

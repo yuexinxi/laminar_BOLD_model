@@ -73,9 +73,9 @@ figure(3) % relation ship between CBF and BOLD is still nonlinear
           % observation that relationship between neuronal and BOLD
           % response is more or less linear.
 plot([cbf{1}(end,1),cbf{2}(end,1),cbf{3}(end,1),cbf{4}(end,1)]',...
-     [LBR{1}(end,1),LBR{2}(end,1),LBR{3}(end,1),LBR{4}(end,1)]); xlim([1 2]); hold on;
+     [LBR{1}(end,1),LBR{2}(end,1),LBR{3}(end,1),LBR{4}(end,1)]); xlim([1 2]); hold on; % lower layer
 plot([cbf{1}(end,end),cbf{2}(end,end),cbf{3}(end,end),cbf{4}(end,end)]',...
-      [LBR{1}(end,end),LBR{2}(end,end),LBR{3}(end,end),LBR{4}(end,end)]); xlim([1 2]); hold off
- xlabel('realative CBF (-)'), ylabel('BOLD (%)'); title('CBF vs BOLD'); legend({'Upper','Lower'})
+      [LBR{1}(end,end),LBR{2}(end,end),LBR{3}(end,end),LBR{4}(end,end)]); xlim([1 2]); hold off % upper layer
+ xlabel('realative CBF (-)'), ylabel('BOLD (%)'); title('CBF vs BOLD'); legend({'Upper','Lower'}) 
  
  

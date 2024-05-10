@@ -3,7 +3,8 @@ function [neuro,cbf] = neuronal_NVC_model(P,U),
 %                 between excitatory and inhibitory activity) followed by blood flow (CBF)
 %                 response, based on Havlicek, et al.(2015) NeuroImage  
 %
-% INPUT:  K - Number of cortical depths
+% INPUT:  P - structure with all default parameters for neuronal-NVC model
+%         U - 
 %
 % OUTPUT: Y - structure with all baseline and relative physiological
 %
@@ -58,14 +59,14 @@ for t = 1:P.T/dt
     end
     %----------------------------------------------------------------------
     % Neuronal (excitatiry & inhibitory)
-    yn(:,1)   = yn(:,1) + dt*(A*Xn(:,1) - MU.*Xn(:,2) + C*U.u(t,:)');
+    yn(:,1)   = yn(:,1) + dt*(A*Xn(:,1) - MU.*Xn(:,2) + C*U.u(t,:)'); % excitatory
 
-    yn(:,2)   = yn(:,2) + dt*(LAM.*(-Xn(:,2) +  Xn(:,1)));
+    yn(:,2)   = yn(:,2) + dt*(LAM.*(-Xn(:,2) +  Xn(:,1))); % inhibitory
     %----------------------------------------------------------------------
     % Vasoactive signal:
-    yn(:,3)   = yn(:,3) + dt*(Xn(:,1) - c1.*(Xn(:,3)));
+    yn(:,3)   = yn(:,3) + dt*(Xn(:,1) - c1.*(Xn(:,3))); 
     %----------------------------------------------------------------------
-    % Inflow:
+    % Inflow: df_a is aboslution, devided by Xn(:,4) for percentage???
     df_a      = c2.*Xn(:,3) - c3.*(Xn(:,4)-1);
     yn(:,4)   = yn(:,4) + dt*(df_a./Xn(:,4));
     

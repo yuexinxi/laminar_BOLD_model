@@ -71,7 +71,7 @@ xlabel('1 - Cortical depth (%)'); ylabel('TTP (s)'); axis square;
 subplot(133), plot(P.H.l,flipud(TTU),'.-'); xlim([0 100]); ylim([0 12]);  %                         
 xlabel('1 - Cortical depth (%)'); ylabel('TTU (%)'); axis square;
   
-
+%{
 
 
 % Second example: Laminar BOLD response to short 20 sec stimulus
@@ -142,4 +142,4 @@ subplot(132), plot(P.H.l,flipud(TTP),'.-'); xlim([0 100]); ylim([0 12]);  %
 xlabel('1 - Cortical depth (%)'); ylabel('TTP (s)'); axis square;
 subplot(133), plot(P.H.l,flipud(TTU),'.-'); xlim([0 100]); ylim([0 12]);  %                         
 xlabel('1 - Cortical depth (%)'); ylabel('TTU (%)'); axis square;
-  
+%}
