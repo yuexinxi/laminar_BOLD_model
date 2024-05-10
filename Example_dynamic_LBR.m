@@ -28,9 +28,6 @@ U.u(onset:offset,:) = 1;             % Set one during stimulus window
 P.H       = LBR_parameters(K); % get default parameters (see inside the function), 
                                % NOTE: By default baseline CBV is increasing towards the surface in the ascending vein
 P.H.T     = P.N.T;             % copy the lenght of the response from neuronal specification
-  
-P.H.alpha_v   = 0.35;          % Choose steady-state CBF-CBV coupling for venules
-P.H.alpha_d   = 0.2;           % Choose steady-state CBF-CBV coupling for ascending vein
 P.H.tau_d_de  = 30;            % Choose dynamic CBF-CBV uncoupling for ascending vein
 
 [LBR,Y] = LBR_model(P.H,cbf);  % Generate the laminar bold response
