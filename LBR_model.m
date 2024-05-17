@@ -90,7 +90,7 @@ else
 end
 x_v      = x_v./sum(x_v);          % Fraction of CBV0 across depths in venules 
 
-if length(P.x_v) == K,             % For ascending vein
+if length(P.x_d) == K,             % For ascending vein % bug fixed in 2024.05.13
     x_d  = P.x_d;                  % Depth-specific fractions defined by user
 else
     x_d  = 10+s_d*flipud(P.l(:));  % Possibility to define linear increase 
@@ -114,12 +114,12 @@ F0d     = flipud(cumsum(flipud(F0v)));
 F0p     = F0d(1);
 
 % Depth-specific transit time:  
-t0v     = V0v./F0v;   
+t0v     = V0v./F0v;
 t0d     = V0d./F0d;
 t0p     = V0p./F0p;
 
 % (check) Total mean transit time:
-tt0v    = mean(t0v);   
+tt0v    = mean(t0v);
 tt0d    = mean(cumsum(t0d));
 tt0     = tt0v + tt0d; % It must equal V0t./sum(F0v)
 
