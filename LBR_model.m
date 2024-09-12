@@ -158,7 +158,8 @@ else
 end
 alpha_p        = P.alpha_p;      % For pial vein
 
-% CBF-CBV uncoupling (tau) during inflation and deflation:
+% CBF-CBV uncoupling (tau) during inflation and deflation: specify for
+% dynamic response
 if length(P.tau_v_in) == K,      % For venules (inflation)
     tau_v_in  = P.tau_v_in;             % Depth-specific defined by user
 else

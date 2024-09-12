@@ -1,3 +1,5 @@
+% Modified by Yuexin 2024-05
+% To replicate Havlicek et Uludag, 2020. Figure 6 and Figure 7
 % Example demonstrating dynamic laminar BOLD response (LBR)for short (2 sec) and longer
 % (20 sec) stimulus durations.
 
@@ -9,7 +11,7 @@ set(0,'DefaultAxesFontSize', 14, ...
       'DefaultAxesTitleFontWeight', 'normal');      
   
 K         = 6;   % number of depths
-%{
+
 % First example: Laminar BOLD response to short 2 sec stimulus
 %==========================================================================
 % Specify neuronal and NVC model:
@@ -40,7 +42,7 @@ P.H.tau_d_de  = 20;            % Choose dynamic CBF-CBV uncoupling for ascending
 %P.H.tau_d_in = 0;
 %P.H.tau_d_de = 0;
 
-[LBR,Y] = LBR_model(P.H,cbf,cmro2);  % Generate the laminar bold response
+[LBR,Y] = LBR_model(P.H,cbf);  % Generate the laminar bold response
 
 
 time_axis = [0:P.H.dt:P.H.T-P.H.dt] - onset*P.N.dt; % time axis in seconds
@@ -84,15 +86,15 @@ xlabel('1 - Cortical depth (%)'); ylabel('TTP (s)'); axis square;
 subplot(133), plot(P.H.l,flipud(TTU),'.-'); xlim([0 100]); ylim([0 20]);  %                         
 xlabel('1 - Cortical depth (%)'); ylabel('TTU (%)'); axis square;
   
-%}
+%{
 
 % Second example: Laminar BOLD response to short 20 sec stimulus
 %==========================================================================
 % Specify neuronal and NVC model:
 %--------------------------------------------------------------------------
 P.N       = neuronal_NVC_parameters(K);  % get default parameters (see inside the function)
-P.N.mu    = 0.5;                % Inhibitory-Excitatory coupling (controls strenght of neuronal (CBF) response transients)
-P.N.C     = 0.9;              % Stimulus strenght
+P.N.mu    = 0.4;                % Inhibitory-Excitatory coupling (controls strenght of neuronal (CBF) response transients)
+P.N.C     = 0.5;              % Stimulus strenght
 P.N.T     = 60;               % Total lenght of the response (in seconds)
 dur       = 20/P.N.dt;        % Stimulus duration (in second, e.g. 2 sec) ... dt - refers to integration step
 onset     = 3/P.N.dt;         % Stimulus onset time (in seconds) 
@@ -109,6 +111,23 @@ P.H{1}.T     = P.N.T;             % copy the lenght of the response from neurona
 P.H{1}.alpha_v   = 0.3;          % Choose steady-state CBF-CBV coupling for venules
 P.H{1}.alpha_d   = 0.3;           % Choose steady-state CBF-CBV coupling for ascending vein
 
+P.H{1}.s_v = 0;
+P.H{1}.s_d = 0.3;
+
+P.H{2} = P.H{1};
+P.H{3} = P.H{1};
+
+%P.H{2}.s_v = 0.3;
+%P.H{3}.s_d = 0.3;
+
+P.H{2}.tau_v_in  = 20;            % Choose dynamic CBF-CBV uncoupling for ascending vein (during inflation)
+P.H{3}.tau_d_in  = 20;            % Choose dynamic CBF-CBV uncoupling for ascending vein (during inflation)
+                               % NOTE: Depending how strong are neruonal (CBF) response transients - CBF-CBV uncoupling (during inflation)in
+                               % only in the ascending vein can make the TTP peak even longer in lower depths compared to the upper depths
+P.H{2}.tau_v_de  = 20;            % Choose dynamic CBF-CBV uncoupling for ascending vein (during deflation) - longer for longer stimulus durations
+                  
+P.H{3}.tau_d_de  = 20;            % Choose dynamic CBF-CBV uncoupling for ascending vein (during deflation) - longer for longer stimulus durations
+
 P.H{1}.tau_v_in  = 20;            % Choose dynamic CBF-CBV uncoupling for ascending vein (during inflation)
 P.H{1}.tau_d_in  = 20;            % Choose dynamic CBF-CBV uncoupling for ascending vein (during inflation)
                                % NOTE: Depending how strong are neruonal (CBF) response transients - CBF-CBV uncoupling (during inflation)in
@@ -117,39 +136,32 @@ P.H{1}.tau_v_de  = 20;            % Choose dynamic CBF-CBV uncoupling for ascend
                   
 P.H{1}.tau_d_de  = 20;            % Choose dynamic CBF-CBV uncoupling for ascending vein (during deflation) - longer for longer stimulus durations
 
-P.H{1}.s_v = 0;
-P.H{1}.s_d = 0;
+
 [LBR{1},Y{1}] = LBR_model(P.H{1},cbf);  % Generate the laminar bold response
-
-P.H{2} = P.H{1};
-P.H{3} = P.H{1};
-P.H{2}.s_v = 0.3;
-P.H{3}.s_d = 0.3;
-
 [LBR{2},Y{2}] = LBR_model(P.H{2},cbf);
 [LBR{3},Y{3}] = LBR_model(P.H{3},cbf);
 
 time_axis = [0:P.H{1}.dt:P.H{1}.T-P.H{1}.dt] - onset*P.N.dt; % time axis in seconds
-%{
+
 % Display underlying physiological responses
 figure(3),
 subplot(231), plot(time_axis,cbf); xlim([time_axis(1), time_axis(end)]); ylim([0.8 2]);
 xlabel('Time (s)'); ylabel('Relative CBF in MV (%)'); axis square; 
-subplot(232), plot(time_axis,Y.mv); xlim([time_axis(1), time_axis(end)]); ylim([0.8 1.6]);
+subplot(232), plot(time_axis,Y{1}.mv); xlim([time_axis(1), time_axis(end)]); ylim([0.8 1.6]);
 xlabel('Time (s)'); ylabel('Relative CMRO_2 in MV (%)'); axis square;
-subplot(233), plot(time_axis,Y.vv); xlim([time_axis(1), time_axis(end)]); ylim([0.8 1.6]);
+subplot(233), plot(time_axis,Y{1}.vv); xlim([time_axis(1), time_axis(end)]); ylim([0.8 1.6]);
 xlabel('Time (s)'); ylabel('Relative CBV in MV (%)'); axis square;
-subplot(234), plot(time_axis,Y.qv); xlim([time_axis(1), time_axis(end)]); ylim([0.7 1.2]);
+subplot(234), plot(time_axis,Y{1}.qv); xlim([time_axis(1), time_axis(end)]); ylim([0.7 1.2]);
 xlabel('Time (s)'); ylabel('Relative dHb in MV (%)'); axis square;
-subplot(235), plot(time_axis,Y.vd); xlim([time_axis(1), time_axis(end)]); ylim([0.8 1.6]);
+subplot(235), plot(time_axis,Y{1}.vd); xlim([time_axis(1), time_axis(end)]); ylim([0.8 1.6]);
 xlabel('Time (s)'); ylabel('Relative CBV in AV (%)'); axis square;
-subplot(236), p = plot(time_axis,Y.qd); xlim([time_axis(1), time_axis(end)]); ylim([0.7 1.2]);
+subplot(236), p = plot(time_axis,Y{1}.qd); xlim([time_axis(1), time_axis(end)]); ylim([0.7 1.2]);
 xlabel('Time (s)'); ylabel('Relative dHb in AV (%)'); axis square; legend([p(1) p(end)],{'Upper','Lower'});
-%} 
+ 
 
 % Display laminar BOLD response
 figure(4),
-p = plot(time_axis,LBR{3}); xlim([time_axis(1), time_axis(end)]); ylim([-2 7]);  %                         
+p = plot(time_axis,LBR{2}); xlim([time_axis(1), time_axis(end)]); ylim([-2 7]);  %                         
 xlabel('Time (s)'); ylabel('LBR (%)'); axis square;  legend([p(1) p(end)],{'Upper','Lower'});
 
 figure(5),
@@ -162,9 +174,16 @@ for i = 1:3
     TTU(:,i) = time_axis(offset+PSU_Pos)'-(offset-onset)*P.N.dt; 
 end
 % Display TTP and TTU as function of cortical depth
-subplot(131), plot(P.H{1}.l,flipud(TTP),'.-'); xlim([0 100]); ylim([0 14]);  %                          
+subplot(131), plot(P.H{1}.l,flipud(TTP),'.-'); xlim([0 100]); ylim([4 14]);  %                          
 xlabel('1 - Cortical depth (%)'); ylabel('TTP (s)'); axis square;
-subplot(132), plot(P.H{1}.l,flipud(TTU),'.-'); xlim([0 100]); ylim([0 14]);  %                         
+%legend("none","only in MV","only in AV");
+legend("both","only in MV","only in AV");
+subplot(132), plot(P.H{1}.l,flipud(TTU),'.-'); xlim([0 100]); ylim([4 14]);  %                         
 xlabel('1 - Cortical depth (%)'); ylabel('TTU (%)'); axis square;
-subplot(133), plot(P.H{1}.l,flipud(PSU_Amp),'.-'); xlim([0 100]); ylim([-2.5 0]);
+%legend("none","only in MV","only in AV");
+legend("both","only in MV","only in AV");
+subplot(133), plot(P.H{1}.l,flipud(PSU_Amp),'.-'); xlim([0 100]); ylim([-1.5 0]);
 xlabel('1 - Cortical depth (%)'); ylabel('BOLD PSU (%)'); axis square;
+%legend("none","only in MV","only in AV");
+legend("both","only in MV","only in AV");
+%}

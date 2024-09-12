@@ -80,7 +80,7 @@ P.TE     = 0.028;     % echo-time (in sec)
 % Hematocrit fraction
 P.Hct_v  = 0.35;      % For venules, Ref. Lu et al. (2002) NeuroImage
 P.Hct_d  = 0.38;      % For ascending vein
-P.Hct_p  = 0.41;      % For pial vein, orignally 0.41
+P.Hct_p  = 0.41;      % For pial vein, orignally 0.42
 
 
 P.B0     = 7;                 % Magnetic field strenght (in Tesla)  

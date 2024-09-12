@@ -1,3 +1,5 @@
+% Modified by Yuexin 2024-05
+% To replicate Havlicek et Uludag, 2020. Figure 5
 % Steady-state example demonstrating variable relative CBF across depths 
 % with different amounts of baseline CBV increase of asceding veins (AV)
 % towards the gray matter (GM) surface. 

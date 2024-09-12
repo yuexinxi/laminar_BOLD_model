@@ -1,4 +1,5 @@
-% Havlicek et Uludag, 2020. Figure 3 and Figure 4
+% Modified by Yuexin 2024-05
+% To replicate Havlicek et Uludag, 2020. Figure 3 and Figure 4
 % Steady-state example demonstrating linear scaling of depth-dependent BOLD
 % response with 'stimulus strenght' or increase of relarive CBF;
 close all; clear all;
